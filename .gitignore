@@ -1,0 +1,7 @@
+server/node_modules/
+node_modules/
+*.log
+server/dataProcessor
+server/dataProcessor
+*.txt
+temp/
