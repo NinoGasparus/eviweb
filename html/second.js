@@ -49,41 +49,46 @@ function getData(){
 
 function login() {
     console.log("Login function called");
+
     let user = {
         uname: document.getElementById("uname").value,
         password: document.getElementById("password").value
-
     };
-
-    fetch(IP+ "login", {
+    console.log(IP);
+    fetch(IP + "login", {
+       
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
         body: JSON.stringify(user),
-    }).then((response) => {
+    })
+    .then((response) => {
         if (response.ok) {
-            let loginErrorElement = document.getElementById("loginError");
-            if (loginErrorElement) {
-                loginErrorElement.style.color = "#ff0000";
-            } else {
-                console.error("Login error element not found!");
-            }
             return response.json();
         } else {
             document.getElementById("loginError").innerText = "Login failed";
             document.getElementById("loginError").style.color = "#ff0000";
             throw new Error('Login failed');
         }
-    }).then((data) => {
-        token = {token: data.token, id: data.id};
-        console.log(token);
-        
+    })
+    .then((data) => {
+        console.log(data);
         document.getElementById("username").innerText = user.uname;
         document.getElementById("username-display").style.display = "block";
-
         document.getElementById("login-content").style.display = "none";
-    }).catch((error) => {
+
+        if (data.role === "admin") {
+            document.getElementById("admin-panel").style.display = "block";
+        } else if (data.role === "ucitelj") {
+            document.getElementById("teacher-panel").style.display = "block";
+        } else if (data.role === "dijak") {
+            document.getElementById("student-panel").style.display = "block";
+        }
+        
+        document.getElementById("loginError").innerText = ""; // Clear error message
+    })
+    .catch((error) => {
         console.error('Login error:', error);
     });
 }
