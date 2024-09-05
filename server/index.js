@@ -9,7 +9,7 @@ const { error, Console } = require('console');
 
 const PORT = process.env.port || 6969;
 app.listen(PORT, () => {
-    console.log('Streznik tece na portu ${PORT}');
+    console.log('Streznik tece na portu', PORT);
 })
 
 
