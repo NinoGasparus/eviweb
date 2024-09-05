@@ -5,3 +5,4 @@ server/dataProcessor
 server/dataProcessor
 *.txt
 temp/
+.vscode/
