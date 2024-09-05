@@ -54,9 +54,8 @@ function login() {
         uname: document.getElementById("uname").value,
         password: document.getElementById("password").value
     };
-    console.log(IP);
+
     fetch(IP + "login", {
-       
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -78,6 +77,8 @@ function login() {
         document.getElementById("username-display").style.display = "block";
         document.getElementById("login-content").style.display = "none";
 
+        document.getElementById("logout").style.display = "block";
+
         if (data.role === "admin") {
             document.getElementById("admin-panel").style.display = "block";
         } else if (data.role === "ucitelj") {
@@ -86,9 +87,24 @@ function login() {
             document.getElementById("student-panel").style.display = "block";
         }
         
-        document.getElementById("loginError").innerText = ""; // Clear error message
+        document.getElementById("loginError").innerText = ""; 
     })
     .catch((error) => {
         console.error('Login error:', error);
     });
 }
+document.addEventListener('DOMContentLoaded', function() {
+    const logoutButton = document.getElementById('logout');
+    
+    if (logoutButton) {
+        logoutButton.addEventListener("click", function() {
+            logoutButton.style.display = "none";
+            document.getElementById("admin-panel").style.display = "none";
+            document.getElementById("teacher-panel").style.display = "none";
+            document.getElementById("student-panel").style.display = "none";
+            document.getElementById("username-display").style.display = "none";
+            document.getElementById("login-content").style.display = "block";
+            document.getElementById("username").innerText = "";
+        });
+    }
+});
