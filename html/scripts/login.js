@@ -1,7 +1,8 @@
 function login() {
     let user = {
         uname: document.getElementById("uname").value,
-        password: document.getElementById("password").value
+        password: document.getElementById("password").value,
+	stay: document.getElementById("stayLoggedIn").checked
     };
     console.log(IP);
     fetch(IP + "login", {
@@ -24,8 +25,12 @@ function login() {
             throw new Error('Login failed');
         }
     }).then((data) =>{
-	setCookie('token', data, 3600);
-	showSidebar(data);
+	if(data.lifeTime == 0){
+		setCookie('token', data.token);
+	}else{
+		setCookie('token',data.token, data.lifeTime);
+	}
+	//showSidebar(data);
     }).catch((error) => {
         console.error('Login error:', error);
     });

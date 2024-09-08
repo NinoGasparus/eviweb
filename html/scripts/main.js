@@ -17,7 +17,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     if(loginButton){
-	    loginButton.click();
+	    if(getCookie("token")){
+		:Wq
+
+	    }else{    
+	    	loginButton.click();
+	    }
     }
   });
 

@@ -1,14 +1,41 @@
 endpoint /login 
-accepts  POST
+	accepts  POST
 
-responses
+	expetcs:
+	{
+		/
+	}
 
-Sucess: 200 OK 
-{
-	token: "256 byte b64 string"
-}
+	responses
+	Sucess: 200 OK 
+		{
+			token: "string, 256byte b64 token",
+			lifeTime: "intiger, cookie lifetime. 1month if stayLoggedIn is checked,  else 0", 
+		}
+	
+	Failed: 403 Forbidden 
+		{
+			/
+		}
 
-Failed: 403 Forbidden no body
 
 
+
+endpoint /getUname 
+	accepts POST
+
+	expects:
+	{
+		token: "256 byte b64 string"
+	}
+
+	responses
+	Sucess: 200 OK
+		{
+			uname:  "username
+		}
+	Failed: 404
+		{
+			/
+		}
 
