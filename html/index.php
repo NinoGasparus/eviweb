@@ -27,8 +27,8 @@
       ?>
     </script>
     <script src="scripts/main.js"></script>
-    <script src="scripts/second.js"></script>
-       
+    <script src="scripts/login.js"></script>
+    <script src="scripts/setCookie.js"></script>
   </head>
 
 <body>

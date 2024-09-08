@@ -1,0 +1,14 @@
+endpoint /login 
+accepts  POST
+
+responses
+
+Sucess: 200 OK 
+{
+	token: "256 byte b64 string"
+}
+
+Failed: 403 Forbidden no body
+
+
+

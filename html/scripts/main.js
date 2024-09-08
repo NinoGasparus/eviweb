@@ -15,6 +15,10 @@ document.addEventListener('DOMContentLoaded', function() {
         loginContent.classList.remove('show-login');
       });
     }
+
+    if(loginButton){
+	    loginButton.click();
+    }
   });
 
 
