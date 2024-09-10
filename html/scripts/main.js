@@ -18,7 +18,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if(loginButton){
 	    if(getCookie("token")){
-		:Wq
 
 	    }else{    
 	    	loginButton.click();
