@@ -1,0 +1,28 @@
+:root {
+  --header-height: 3.5rem;
+
+  --first-color: #333333; 
+  --title-color: #666666; 
+  --text-color: #999999; 
+  --border-color: #CCCCCC; 
+  --white-color: #FFFFFF; 
+  --body-color: #F2F2F2; 
+  --container-color: #FFFFFF; 
+
+  --body-font: "Montserrat", sans-serif;
+  --second-font: "Montagu Slab", serif;
+  --biggest-font-size: 2rem;
+  --h1-font-size: 1.5rem;
+  --h2-font-size: 1.25rem;
+  --h3-font-size: 1rem;
+  --normal-font-size: .938rem;
+  --small-font-size: .813rem;
+  --smaller-font-size: .75rem;
+
+  --font-regular: 400;
+  --font-medium: 500;
+  --font-semi-bold: 600;
+
+  --z-tooltip: 10;
+  --z-fixed: 100;
+}

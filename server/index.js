@@ -1,37 +1,60 @@
 const express = require('express')
 const app = express();
 app.use(express.json());
-const cors = require('cors');
-app.use(cors());
 const mysql = require('mysql');
+app.use(express.json());
+const cors = require('cors');
+const fs = require('fs');
+app.use(cors());
 const { error, Console } = require('console');
-   
+const path = require('path');
 
 const PORT = process.env.port || 6969;
 app.listen(PORT, () => {
-    console.log('Streznik tece na portu ${PORT}');
+    console.log('Streznik tece na portu', PORT);
 })
 
-
-const users = [
-    { uname: "admin", password: "admin", role: "admin" },
-    { uname: "ucitelj", password: "ucitelj", role: "ucitelj" },
-    { uname: "dijak", password: "dijak", role: "dijak" }
-]
-
-app.post("/login", (req, res) => {
-    console.log(req.body);
-
-    const user = users.find(u => u.uname === req.body.uname);
-    if (user && user.password === req.body.password) {
-        console.log("W");
-        res.status(200).json({ message: 'Login successful', role: user.role });
-    } else {
-        console.log("F");
-        res.status(401).send('Invalid credentials');
-    }
+const database = mysql.createConnection({
+    host: 'localhost',
+    port: 4000,
+    user: 'root',
+    password: '',
+    database: 'school'
 });
 
+//database.connect((err) =>{
+  //if (err) throw err;
+  //console.log('Cnnected to proxmox Vm, SQL');  
+//})
+
+const datapath = (path.join(__dirname, 'public', 'data.json'));
+
+function bingus(req,res){
+
+    database.query('SELECT * FROM subjects', (err,results)=>{
+        if(err) return res.status(500).json({error: err});
+        console.log(results); 
+       
+        res.status(200).json(results).send();
+       
+    });
+}
+
+
+app.get('/subjects', (req, res)=>{
+   bingus(req,res);
+})
+const users = [
+    { uname: "admin", password: "admin", role: "admin", tokens:  [] },
+    { uname: "ucitelj", password: "ucitelj", role: "ucitelj",  tokens: [] },
+    { uname: "dijak", password: "dijak", role: "dijak", tokens:  [] }
+]
+module.exports =  users;
+
+const login =  require("./endpoints/login.js");
+app.post("/login", (req,  res) =>{
+	login(req, res);
+});
 
 
 

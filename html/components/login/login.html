@@ -1,0 +1,39 @@
+ <div class="login" id="login-content">
+      <form class="login__form">
+        <h3 class="login__title">Log In</h3>
+        <div class="login__group grid">
+          <div>
+            <label for="login-email" class="login__label">Email</label>
+            <input
+              type="text"
+              placeholder="Write your email"
+              id="uname"
+              class="login__input"
+            />
+          </div>
+          <div>
+            <label for="login-pass" class="login__label">Password</label>
+            <input
+              type="password"
+              placeholder="Enter your password"
+              id="password"
+              class="login__input"
+            />
+          </div>
+          <span class="login__signup">
+		  You do not have an account? <a href="#">Sign up</a> <br> This site  uses  cookies, without you can  expect degrated expirience, by entering  the  site you agree  with  their  usage
+          </span>
+          <span class="login__forgot">
+		  <a href="#">You forgot your password?</a><br> Stay Logged in  <input  type='checkbox' id='stayLoggedIn'></input>
+          </span>
+          <button type="button" class="login__button button" onclick="login();">
+            Log In
+          </button>
+        </div>
+      </form>
+      <i class="ri-close-line login__close" id="login-close"></i>
+    </div>
+    <div id="username-display" style="display:none;">
+      Logged in as: <span id="username"></span>
+  </div>
+  

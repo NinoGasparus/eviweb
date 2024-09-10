@@ -1,0 +1,19 @@
+{
+    "ucitelji": [
+      { "id": 1, "ime": "Janez Novak", "predmeti": [1, 2] },
+      { "id": 2, "ime": "Maja Potočnik", "predmeti": [3, 4] },
+      { "id": 3, "ime": "Peter Horvat", "predmeti": [1, 3] }
+    ],
+    "predmeti": [
+      { "id": 1, "ime": "Matematika" },
+      { "id": 2, "ime": "Fizika" },
+      { "id": 3, "ime": "Kemija" },
+      { "id": 4, "ime": "Biologija" }
+    ],
+    "ucenci": [
+      { "id": 1, "ime": "Anže Kovač", "predmeti": [1, 3] },
+      { "id": 2, "ime": "Lana Smole", "predmeti": [2, 4] },
+      { "id": 3, "ime": "Marko Vidmar", "predmeti": [1, 2, 4] }
+    ]
+  }
+  

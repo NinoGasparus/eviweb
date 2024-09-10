@@ -1,7 +1,8 @@
 server/node_modules/
 node_modules/
 *.log
-server/dataProcessor
-server/dataProcessor
+server/package-lock.json
+server/package.json
 *.txt
 temp/
+.vscode/
