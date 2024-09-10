@@ -47,7 +47,7 @@ let stars_id = [
 
 
 app.post('/subjects', (req, res)=>{
-    
+    navbar(req,res);
 
  })
 
