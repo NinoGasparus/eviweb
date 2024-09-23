@@ -1,51 +1,3 @@
-function postData(){
-    
-        
-        let data = {
-         
-        }
-
-        fetch("http://127.0.0.1:420/add", {
-            method:"POST",
-            headers:{
-                "Content-Type": "application/json",
-            },
-    
-            body: JSON.stringify(data)
-        }).then((response) =>{
-            if(response.ok){
-                document.getElementById("insertError").style = "color: #ffffff"
-            }else{
-                document.getElementById("insertError").style = "color: #ff0000"
-            }
-        })
-}
-
-
-
-
-function getData(){
-
-
-    fetch("http://127.0.0.1:420/get", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-  
-        body: JSON.stringify(data),
-      })
-        .then((response) => {
-          if (response.ok) {
-            return response.json();
-          } else {
-            
-          } 
-        
-        
-        })
-}
-
 
 function login() {
     console.log("Login function called");
@@ -72,6 +24,7 @@ function login() {
         }
     })
     .then((data) => {
+        navbar();
         console.log(data);
         document.getElementById("username").innerText = user.uname;
         document.getElementById("username-display").style.display = "block";
@@ -108,3 +61,37 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+function navbar() {
+    let user = {
+       token: getCookie("token")
+    };
+    console.log(token);
+    console.log(IP);
+    fetch(IP + "login", {
+       
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(user),
+    })
+    .then((response) => {
+        if (response.ok) {
+ 		document.getElementById("username").innerText = user.uname;
+        	document.getElementById("username-display").style.display = "block";
+        	document.getElementById("login-content").style.display = "none";
+		return response.json();
+	} else {
+            document.getElementById("loginError").innerText = "Login failed";
+            document.getElementById("loginError").style.color = "#ff0000";
+            throw new Error('Login failed');
+        }
+    }).then((data) =>{
+	console.log(data);
+
+    }).catch((error) => {
+        console.error('Login error:', error);
+    });
+}
+

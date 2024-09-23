@@ -29,6 +29,7 @@
     <script src="scripts/main.js"></script>
     <script src="scripts/login.js"></script>
     <script src="scripts/setCookie.js"></script>
+    <script src="scripts/navbar.js"></script>
   </head>
 
 <body>
