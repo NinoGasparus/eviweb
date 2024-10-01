@@ -26,18 +26,32 @@ function login() {
         document.getElementById("username-display").style.display = "block";
         document.getElementById("login-content").style.display = "none";
         
-        // Save token to cookies
         if (data.lifeTime === 0) {
             setCookie('token', data.token);
         } else {
             setCookie('token', data.token, data.lifeTime);
         }
 
-        // Show the appropriate navbar and admin panel based on the role
         showNavbar(data.role);
-        showAdminPanel(data.role); // Show the admin-panel for the admin role
+        showAdminPanel(data.role); 
+        console.log("Login succesful,", data)
     })
     .catch((error) => {
         console.error('Login error:', error);
     });
 }
+document.addEventListener('DOMContentLoaded', function() {
+    const logoutButton = document.getElementById('logout');
+    
+    if (logoutButton) {
+        logoutButton.addEventListener("click", function() {
+            logoutButton.style.display = "none";
+            document.getElementById("admin-panel").style.display = "none";
+            document.getElementById("teacher-panel").style.display = "none";
+            document.getElementById("student-panel").style.display = "none";
+            document.getElementById("username-display").style.display = "none";
+            document.getElementById("login-content").style.display = "block";
+            document.getElementById("username").innerText = ""; 
+        });
+    }
+});

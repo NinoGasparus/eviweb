@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Učenci</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        header {
+            background-color: #0077b6;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+        }
+        h2 {
+            color: #0077b6;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #0077b6;
+            padding-bottom: 10px;
+        }
+        h3 {
+            color: #333;
+            margin-top: 40px;
+        }
+        form {
+            margin-bottom: 30px;
+        }
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+        input, select {
+            padding: 12px;
+            margin: 10px 0 20px 0;
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            background-color: #f9f9f9;
+            transition: background-color 0.3s ease;
+        }
+        input:focus, select:focus {
+            outline: none;
+            background-color: #e0f7fa;
+        }
+        button {
+            padding: 12px 20px;
+            background-color: #0077b6;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #005f8b;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #0077b6;
+            color: white;
+            text-align: left;
+        }
+        td {
+            background-color: #f9f9f9;
+        }
+        td button {
+            padding: 8px 12px;
+            background-color: #ff5722;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.3s ease;
+        }
+        td button:hover {
+            background-color: #e64a19;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Upravljanje učencev</h1>
+</header>
+
+<div class="container">
+
+    <div class="role-section" id="admin-section">
+        <h2>Administrator - Vpis / Urejanje učencev</h2>
+        <form id="studentForm">
+            <label for="student-name">Ime in priimek učenca:</label>
+            <input type="text" id="student-name" placeholder="Vnesi ime in priimek učenca" required>
+
+            <label for="student-subjects">Predmeti (več predmetov izberi s tipko Ctrl):</label>
+            <select id="student-subjects" multiple required>
+                <option value="Matematika">Matematika</option>
+                <option value="Slovenščina">Slovenščina</option>
+                <option value="Fizika">Fizika</option>
+                <option value="Kemija">Kemija</option>
+                <option value="Zgodovina">Zgodovina</option>
+                <option value="Biologija">Biologija</option>
+                <option value="Geografija">Geografija</option>
+                <option value="Informatika">Informatika</option>
+            </select>
+
+            <button type="button" onclick="addStudent()">Dodaj učenca</button>
+        </form>
+
+        <h3>Seznam učencev</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Ime in priimek</th>
+                    <th>Predmeti</th>
+                    <th>Uredi / Izbriši</th>
+                </tr>
+            </thead>
+            <tbody id="student-list">
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<script>
+    var students = [];
+
+    function addStudent() {
+        var studentName = document.getElementById("student-name").value;
+        var studentSubjects = Array.from(document.getElementById("student-subjects").selectedOptions)
+                                   .map(option => option.value); 
+
+        if (studentName === "" || studentSubjects.length === 0 || studentSubjects.length < 2) {
+            alert("Prosim, izpolnite vsa polja in izberite več kot en predmet.");
+            return;
+        }
+
+        var newStudent = {
+            name: studentName,
+            subjects: studentSubjects
+        };
+
+        students.push(newStudent);
+
+        updateStudentTable();
+        document.getElementById("studentForm").reset();
+    }
+
+    function updateStudentTable() {
+        var table = document.getElementById("student-list");
+        table.innerHTML = "";
+
+        students.forEach(function(student, index) {
+            var row = table.insertRow();
+
+            var nameCell = row.insertCell(0);
+            var subjectsCell = row.insertCell(1);
+            var actionCell = row.insertCell(2);
+
+            nameCell.textContent = student.name;
+            subjectsCell.textContent = student.subjects.join(", ");
+            actionCell.innerHTML = '<button onclick="editStudent(' + index + ')">Uredi</button>' +
+                                   '<button onclick="deleteStudent(' + index + ')">Izbriši</button>';
+        });
+    }
+
+    function editStudent(index) {
+        var student = students[index];
+
+        document.getElementById("student-name").value = student.name;
+        var options = document.getElementById("student-subjects").options;
+        for (var i = 0; i < options.length; i++) {
+            options[i].selected = student.subjects.includes(options[i].value);
+        }
+
+        document.getElementById("studentForm").onsubmit = function() {
+            student.name = document.getElementById("student-name").value;
+            student.subjects = Array.from(document.getElementById("student-subjects").selectedOptions)
+                                     .map(option => option.value);
+
+            updateStudentTable();
+            document.getElementById("studentForm").reset();
+            document.getElementById("studentForm").onsubmit = addStudent;
+        }
+    }
+
+    function deleteStudent(index) {
+        students.splice(index, 1);
+        updateStudentTable();
+    }
+</script>
+
+</body>
+</html>
