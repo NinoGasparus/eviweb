@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predmeti</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #3b3b3b;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+        .container {
+            width: 90%;
+            margin: 20px auto;
+        }
+        h2 {
+            color: #333;
+        }
+        .role-section {
+            margin-bottom: 40px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #3b3b3b;
+            color: white;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #499dac;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #499dac;
+        }
+        input, select {
+            padding: 10px;
+            margin: 5px 0;
+            width: 100%;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Upravljanje predmetov</h1>
+</header>
+
+<div class="container">
+
+    <div class="role-section" id="admin-section">
+        <h2>Administrator - Vpis / Urejanje / Brisanje predmetov</h2>
+        <form id="addSubjectForm">
+            <label for="subject-name">Ime predmeta:</label>
+            <input type="text" id="subject-name" placeholder="Vnesi ime predmeta" required>
+            <button type="submit">Dodaj predmet</button>
+        </form>
+
+        <h3>Seznam predmetov</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Predmet</th>
+                    <th>Uredi</th>
+                    <th>Izbriši</th>
+                </tr>
+            </thead>
+            <tbody id="subject-list">
+                <tr>
+                    <td></td>
+                    <td><button>Uredi</button></td>
+                    <td><button>Izbriši</button></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><button>Uredi</button></td>
+                    <td><button>Izbriši</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="role-section" id="teacher-section">
+        <h2>Učitelj - Upravljanje gradiv in nalog</h2>
+        <h3>Naloži gradiva za predmet</h3>
+        <form id="uploadMaterialForm">
+            <label for="teacher-subjects">Izberi predmet:</label>
+            <select id="teacher-subjects">
+                <option value="matematika">Matematika</option>
+                <option value="slovenscina">Slovenščina</option>
+            </select>
+            <label for="material-upload">Naloži datoteko:</label>
+            <input type="file" id="material-upload" required>
+            <button type="submit">Naloži gradivo</button>
+        </form>
+
+        <h3>Pregled nalog, ki so jih oddali učenci</h3>
+        <label for="task-subjects">Izberi predmet:</label>
+        <select id="task-subjects">
+            <option value="matematika">Matematika</option>
+            <option value="slovenscina">Slovenščina</option>
+        </select>
+
+        <h3>Oddane naloge</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Učenec</th>
+                    <th>Naloga</th>
+                    <th>Datum oddaje</th>
+                </tr>
+            </thead>
+            <tbody id="submitted-tasks-list">
+                <tr>
+                    <td>Janez Novak</td>
+                    <td>Naloga 1</td>
+                    <td>12. 9. 2024</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="role-section" id="student-section">
+        <h2>Učenec - Pregled gradiv in oddaja nalog</h2>
+        <h3>Pregled gradiv za izbrani predmet</h3>
+        <label for="student-subjects">Izberi predmet:</label>
+        <select id="student-subjects">
+            <option value="matematika">Matematika</option>
+            <option value="slovenscina">Slovenščina</option>
+        </select>
+
+        <h3>Gradiva</h3>
+        <ul id="materials-list">
+            <li>Matematika - Uvod v algebro (PDF)</li>
+        </ul>
+
+        <h3>Oddaja nalog</h3>
+        <form id="submitTaskForm">
+            <label for="task-subjects-student">Izberi predmet:</label>
+            <select id="task-subjects-student">
+                <option value="matematika">Matematika</option>
+                <option value="slovenscina">Slovenščina</option>
+            </select>
+            <label for="task-upload">Naloži nalogo:</label>
+            <input type="file" id="task-upload" required>
+            <button type="submit">Oddaj nalogo</button>
+        </form>
+    </div>
+
+</div>
+
+</body>
+</html>

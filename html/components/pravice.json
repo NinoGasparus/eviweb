@@ -2,7 +2,6 @@
   
   "modules": {
     "admin": [
-      "admin-control",
       "admin-subjects",
       "admin-teachers",
       "admin-students",
@@ -13,7 +12,6 @@
       "admin-settings"
     ],
     "teacher": [
-      "teacher-control",
       "teacher-grades",
       "teacher-timetables",
       "teacher-absences",
@@ -21,8 +19,6 @@
       "teacher-settings"
     ],
     "parent": [
-      "parent-control",
-      "parent-students",
       "parent-grades",
       "parent-timetables",
       "parent-absences",
@@ -31,7 +27,7 @@
     ],
 
     "student": [
-      "student-control",
+      "student-profile",
       "student-grades",
       "student-timetables",
       "student-absences",
