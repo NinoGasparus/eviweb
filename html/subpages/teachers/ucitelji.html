@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Učitelji</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #3b3b3b;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+        .container {
+            width: 90%;
+            margin: 20px auto;
+        }
+        h2 {
+            color: #3b3b3b;
+        }
+        .role-section {
+            margin-bottom: 40px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #3b3b3b;
+            color: white;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #499dac;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #499dac;
+        }
+        input, select {
+            padding: 10px;
+            margin: 5px 0;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .action-btn {
+            margin: 0 5px;
+            padding: 5px 10px;
+            background-color: #ff5722;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .action-btn:hover {
+            background-color: #e64a19;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Upravljanje učiteljev</h1>
+</header>
+
+<div class="container">
+
+    <div class="role-section" id="admin-section">
+        <h2>Administrator - Vpis / Urejanje učiteljev</h2>
+        <form id="teacherForm">
+            <label for="teacher-name">Ime in priimek učitelja:</label>
+            <input type="text" id="teacher-name" placeholder="Vnesi ime in priimek učitelja" required>
+
+            <label for="teacher-subjects">Predmeti (več predmetov izberi s tipko Ctrl):</label>
+            <select id="teacher-subjects" multiple required>
+                <option value="Matematika">Matematika</option>
+                <option value="Slovenščina">Slovenščina</option>
+                <option value="Fizika">Fizika</option>
+                <option value="Kemija">Kemija</option>
+                <option value="Zgodovina">Zgodovina</option>
+                <option value="Biologija">Biologija</option>
+                <option value="Geografija">Geografija</option>
+                <option value="Informatika">Informatika</option>
+            </select>
+
+            <button type="button" onclick="addTeacher()">Dodaj učitelja</button>
+        </form>
+
+        <h3>Seznam učiteljev</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Ime in priimek</th>
+                    <th>Predmeti</th>
+                    <th>Uredi / Izbriši</th>
+                </tr>
+            </thead>
+            <tbody id="teacher-list">
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<script>
+    var teachers = [];
+    function addTeacher() {
+        var teacherName = document.getElementById("teacher-name").value;
+        var teacherSubjects = Array.from(document.getElementById("teacher-subjects").selectedOptions)
+                                   .map(option => option.value);
+        if(teacherName === "" || teacherSubjects.length === 0) {
+            alert("Prosim, izpolnite vsa polja.");
+            return;
+        }
+
+        var newTeacher = {
+            name: teacherName,
+            subjects: teacherSubjects
+        };
+
+        teachers.push(newTeacher);
+
+        updateTeacherTable();
+
+        document.getElementById("teacherForm").reset();
+    }
+
+    function updateTeacherTable() {
+        var table = document.getElementById("teacher-list");
+        table.innerHTML = "";
+        teachers.forEach(function(teacher, index) {
+            var row = table.insertRow();
+
+            var nameCell = row.insertCell(0);
+            var subjectsCell = row.insertCell(1);
+            var actionCell = row.insertCell(2);
+
+            nameCell.textContent = teacher.name;
+            subjectsCell.textContent = teacher.subjects.join(", ");
+            actionCell.innerHTML = '<button class="action-btn" onclick="editTeacher(' + index + ')">Uredi</button>' +
+                                   '<button class="action-btn" onclick="deleteTeacher(' + index + ')">Izbriši</button>';
+        });
+    }
+
+    function editTeacher(index) {
+        var teacher = teachers[index];
+
+        document.getElementById("teacher-name").value = teacher.name;
+
+        var options = document.getElementById("teacher-subjects").options;
+        for (var i = 0; i < options.length; i++) {
+            options[i].selected = teacher.subjects.includes(options[i].value);
+        }
+
+        document.getElementById("teacherForm").onsubmit = function() {
+
+            teacher.name = document.getElementById("teacher-name").value;
+            teacher.subjects = Array.from(document.getElementById("teacher-subjects").selectedOptions)
+                                     .map(option => option.value);
+
+            updateTeacherTable();
+
+            document.getElementById("teacherForm").reset();
+            document.getElementById("teacherForm").onsubmit = addTeacher; 
+        }
+    }
+    function deleteTeacher(index) {
+        teachers.splice(index, 1); 
+        updateTeacherTable(); 
+    }
+
+</script>
+
+</body>
+</html>

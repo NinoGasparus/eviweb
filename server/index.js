@@ -50,6 +50,7 @@ app.post('/subjects', (req, res)=>{
     navbar(req,res);
 
  })
+ 
 
 //database.connect((err) =>{
   //if (err) throw err;

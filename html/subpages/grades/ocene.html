@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ocene</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        header {
+            background-color: #0077b6;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+        }
+        h2 {
+            color: #0077b6;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #0077b6;
+            padding-bottom: 10px;
+        }
+        form {
+            margin-bottom: 30px;
+        }
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+        input, select {
+            padding: 12px;
+            margin: 10px 0 20px 0;
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            background-color: #f9f9f9;
+            transition: background-color 0.3s ease;
+        }
+        input:focus, select:focus {
+            outline: none;
+            background-color: #e0f7fa;
+        }
+        button {
+            padding: 12px 20px;
+            background-color: #0077b6;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #005f8b;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+        }
+        th {
+            background-color: #0077b6;
+            color: white;
+            text-align: left;
+        }
+        td {
+            background-color: #f9f9f9;
+        }
+        td button {
+            background-color: #dc3545;
+            padding: 8px 12px;
+            border-radius: 3px;
+            font-size: 0.9rem;
+            margin-left: 5px;
+            transition: background-color 0.3s ease;
+        }
+        td button:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Evidenca ocen</h1>
+</header>
+
+<div class="container">
+
+    <div class="role-section" id="teacher-section">
+        <h2>Učitelj - Vpis ocen</h2>
+        <form id="gradeForm">
+            <label for="student-name">Ime in priimek učenca:</label>
+            <input type="text" id="student-name" placeholder="Vnesi ime in priimek učenca" required>
+
+            <label for="subject">Predmet:</label>
+            <input type="text" id="subject" placeholder="Vnesi predmet" required>
+
+            <label for="grade">Ocena:</label>
+            <input type="number" id="grade" min="1" max="5" placeholder="Vnesi oceno (1-5)" required>
+
+            <label for="grade-date">Datum vpisa:</label>
+            <input type="date" id="grade-date" required>
+
+            <button type="button" onclick="addGrade()">Dodaj oceno</button>
+        </form>
+
+        <h3>Seznam vseh ocen</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Ime in priimek</th>
+                    <th>Predmet</th>
+                    <th>Ocena</th>
+                    <th>Datum vpisa</th>
+                    <th>Izbriši</th>
+                </tr>
+            </thead>
+            <tbody id="grade-list">
+            </tbody>
+        </table>
+    </div>
+
+    <div class="role-section" id="student-section">
+        <h2>Učenec - Pregled ocen</h2>
+
+        <h3>Moje ocene</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Predmet</th>
+                    <th>Ocena</th>
+                    <th>Datum vpisa</th>
+                </tr>
+            </thead>
+            <tbody id="student-grade-list">
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<script>
+    var grades = []; 
+
+    function addGrade() {
+        var studentName = document.getElementById("student-name").value;
+        var subject = document.getElementById("subject").value;
+        var grade = document.getElementById("grade").value;
+        var gradeDate = document.getElementById("grade-date").value;
+
+        if(studentName === "" || subject === "" || grade === "" || gradeDate === "") {
+            alert("Prosim, izpolnite vsa polja.");
+            return;
+        }
+
+        var newGrade = {
+            name: studentName,
+            subject: subject,
+            grade: grade,
+            date: gradeDate
+        };
+
+        grades.push(newGrade);
+
+        updateGradeTable();
+
+        document.getElementById("gradeForm").reset();
+    }
+
+    function updateGradeTable() {
+        var table = document.getElementById("grade-list");
+        table.innerHTML = ""; 
+        grades.forEach(function(grade, index) {
+            var row = table.insertRow();
+
+            var nameCell = row.insertCell(0);
+            var subjectCell = row.insertCell(1);
+            var gradeCell = row.insertCell(2);
+            var dateCell = row.insertCell(3);
+            var deleteCell = row.insertCell(4);
+
+            nameCell.textContent = grade.name;
+            subjectCell.textContent = grade.subject;
+            gradeCell.textContent = grade.grade;
+            dateCell.textContent = grade.date;
+            deleteCell.innerHTML = '<button onclick="deleteGrade(' + index + ')">Izbriši</button>';
+        });
+
+        updateStudentGradeTable();
+    }
+
+    function deleteGrade(index) {
+        grades.splice(index, 1); 
+        updateGradeTable(); 
+    }
+
+    function updateStudentGradeTable() {
+        var studentName = "Janez Novak"; 
+        var table = document.getElementById("student-grade-list");
+        table.innerHTML = ""; 
+
+        var studentGrades = grades.filter(function(grade) {
+            return grade.name === studentName;
+        });
+
+        studentGrades.forEach(function(grade) {
+            var row = table.insertRow();
+
+            var subjectCell = row.insertCell(0);
+            var gradeCell = row.insertCell(1);
+            var dateCell = row.insertCell(2);
+
+            subjectCell.textContent = grade.subject;
+            gradeCell.textContent = grade.grade;
+            dateCell.textContent = grade.date;
+        });
+    }
+</script>
+
+</body>
+</html>
