@@ -44,11 +44,64 @@ CREATE TABLE  grades(
   FOREIGN KEY(teacher) REFERENCES teacher(id)
   FOREIGN KEY(subject) REFERENCES subjects(id)
 );
-CREATE TABLE  timetables();
+CREATE TABLE  timetables(
+  int id default 0,
+  int week,
+);
 
-CREATE TABLE  exams();
-CREATE TABLE  subjects();
-CREATE TABLE  absences();
+CREATE TABLE week(
+  int id default 0,
+  int table default 0,
+  datetime start default TODAY(),
+  datetime end default TODAY(),
+
+  PRIMARY KEY(id)
+  FOREIGN KEY(table) REFERENCES timetables(week)
+);
+
+CREATE TABLE day(
+  int id default 0,
+  int week default 0,
+  PRIMARY KEY(id)
+  FOREIGN KEY(week) REFERENCES week(id)
+)
+CREATE TABLE  hour(
+  int id default 0,
+  int dan,
+  int ucitelj,
+  int subject,
+  varchar opis,
+  
+  FOREIGN KEY(subject) REFERENCES subject(id)
+  FOREIGN KEY(dan) REFERENCES day(id)
+  FOREIGN KEY(ucitelj) REFERENCES teacher(id)
+  PRIMARY KEY(id)
+);
+CREATE TABLE  exams(
+  int id default 0,
+  int subject,
+  int teacher,
+  int hour, 
+
+  PRIMARY KEY(id)
+  FOREIGN KEY(subjects) REFERENCES subjects(id)
+  FOREIGN KEY(teacher) REFERENCES teacher(id)
+  FOREIGN KEY(hour) REFERENCES hour(id)
+);
+CREATE TABLE  subjects(
+  int id default 0,
+  varchar title,
+
+  PRIMARY KEY(id)
+);
+CREATE TABLE  absences(
+  int id default 0,
+  int ura,
+  int student,
+  PRIMARY KEY(id)
+  FOREIGN KEY(ura) REFERENCES hour(id)
+  FOREIGN KEY(student) REFERENCES student(id)
+);
 CREATE TABLE  users(
   int id AUTO INCREMENT,
   PRIMARY KEY(id),
