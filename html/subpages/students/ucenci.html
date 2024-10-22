@@ -13,7 +13,7 @@
             color: #333;
         }
         header {
-            background-color: #0077b6;
+            background-color: #4aaae2;
             color: white;
             padding: 15px;
             text-align: center;
@@ -32,10 +32,10 @@
             border-radius: 10px;
         }
         h2 {
-            color: #0077b6;
+            color: #4aaae2;
             font-size: 1.5rem;
             margin-bottom: 20px;
-            border-bottom: 2px solid #0077b6;
+            border-bottom: 2px solid #4aaae2;
             padding-bottom: 10px;
         }
         h3 {
@@ -67,7 +67,7 @@
         }
         button {
             padding: 12px 20px;
-            background-color: #0077b6;
+            background-color: #4aaae2; 
             color: white;
             border: none;
             border-radius: 5px;
@@ -76,7 +76,7 @@
             transition: background-color 0.3s ease;
         }
         button:hover {
-            background-color: #005f8b;
+            background-color: #3e97ca;
         }
         table {
             width: 100%;
@@ -89,16 +89,17 @@
             border: 1px solid #ddd;
         }
         th {
-            background-color: #0077b6;
+            background-color: #4aaae2; 
             color: white;
             text-align: left;
         }
         td {
             background-color: #f9f9f9;
         }
-        td button {
+      
+        td .edit-btn {
             padding: 8px 12px;
-            background-color: #ff5722;
+            background-color: #f5a623; 
             color: white;
             border: none;
             border-radius: 5px;
@@ -106,8 +107,22 @@
             font-size: 0.9rem;
             transition: background-color 0.3s ease;
         }
-        td button:hover {
-            background-color: #e64a19;
+        td .edit-btn:hover {
+            background-color: #d78b1b; 
+        }
+       
+        td .delete-btn {
+            padding: 8px 12px;
+            background-color: #d0021b;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.3s ease;
+        }
+        td .delete-btn:hover {
+            background-color: #a00015;
         }
     </style>
 </head>
@@ -162,7 +177,7 @@
     function addStudent() {
         var studentName = document.getElementById("student-name").value;
         var studentSubjects = Array.from(document.getElementById("student-subjects").selectedOptions)
-                                   .map(option => option.value); 
+                                   .map(option => option.value);
 
         if (studentName === "" || studentSubjects.length === 0 || studentSubjects.length < 2) {
             alert("Prosim, izpolnite vsa polja in izberite več kot en predmet.");
@@ -193,8 +208,8 @@
 
             nameCell.textContent = student.name;
             subjectsCell.textContent = student.subjects.join(", ");
-            actionCell.innerHTML = '<button onclick="editStudent(' + index + ')">Uredi</button>' +
-                                   '<button onclick="deleteStudent(' + index + ')">Izbriši</button>';
+            actionCell.innerHTML = '<button class="edit-btn" onclick="editStudent(' + index + ')">Uredi</button>' +
+                                   '<button class="delete-btn" onclick="deleteStudent(' + index + ')">Izbriši</button>';
         });
     }
 

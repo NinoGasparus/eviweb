@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upravljanje testov</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        header {
+            background-color: #4aaae2;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+        }
+        h2 {
+            color: #4aaae2;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #4aaae2;
+            padding-bottom: 10px;
+        }
+        h3 {
+            color: #333;
+            margin-top: 40px;
+        }
+        form {
+            margin-bottom: 30px;
+        }
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+        input, select {
+            padding: 12px;
+            margin: 10px 0 20px 0;
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            background-color: #f9f9f9;
+            transition: background-color 0.3s ease;
+        }
+        input:focus, select:focus {
+            outline: none;
+            background-color: #e0f7fa;
+        }
+        button {
+            padding: 12px 20px;
+            background-color: #4aaae2; 
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #3e97ca;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #4aaae2; 
+            color: white;
+            text-align: left;
+        }
+        td {
+            background-color: #f9f9f9;
+        }
+        td .edit-btn {
+            padding: 8px 12px;
+            background-color: #f5a623; 
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.3s ease;
+        }
+        td .edit-btn:hover {
+            background-color: #d78b1b; 
+        }
+        td .delete-btn {
+            padding: 8px 12px;
+            background-color: #d0021b;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.3s ease;
+        }
+        td .delete-btn:hover {
+            background-color: #a00015;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Upravljanje testov</h1>
+</header>
+
+<div class="container">
+    <h2>Administrator - Vpis / Urejanje testov</h2>
+
+    <form id="testForm">
+        <label for="test-date">Datum testa:</label>
+        <input type="date" id="test-date" required>
+
+        <label for="test-subject">Predmet testa:</label>
+        <select id="test-subject" required>
+            <option value="Matematika">Matematika</option>
+            <option value="Slovenščina">Slovenščina</option>
+            <option value="Fizika">Fizika</option>
+            <option value="Kemija">Kemija</option>
+            <option value="Zgodovina">Zgodovina</option>
+            <option value="Biologija">Biologija</option>
+            <option value="Geografija">Geografija</option>
+            <option value="Informatika">Informatika</option>
+        </select>
+
+        <label for="test-time">Ura testa:</label>
+        <input type="time" id="test-time" required>
+
+        <label for="test-teacher">Učitelj:</label>
+        <input type="text" id="test-teacher" placeholder="Vnesi ime učitelja" required>
+
+        <button type="button" onclick="addTest()">Dodaj test</button>
+    </form>
+
+    <h3>Seznam testov</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Datum</th>
+                <th>Predmet</th>
+                <th>Ura</th>
+                <th>Učitelj</th>
+                <th>Uredi / Izbriši</th>
+            </tr>
+        </thead>
+        <tbody id="test-list">
+        </tbody>
+    </table>
+</div>
+
+<script>
+    var tests = [];
+
+    function addTest() {
+        var testDate = document.getElementById("test-date").value;
+        var testSubject = document.getElementById("test-subject").value;
+        var testTime = document.getElementById("test-time").value;
+        var testTeacher = document.getElementById("test-teacher").value;
+
+        if (testDate === "" || testSubject === "" || testTime === "" || testTeacher === "") {
+            alert("Prosim, izpolnite vsa polja.");
+            return;
+        }
+
+        var newTest = {
+            date: testDate,
+            subject: testSubject,
+            time: testTime,
+            teacher: testTeacher
+        };
+
+        tests.push(newTest);
+
+        updateTestTable();
+        document.getElementById("testForm").reset();
+    }
+
+    function updateTestTable() {
+        var table = document.getElementById("test-list");
+        table.innerHTML = "";
+
+        tests.forEach(function(test, index) {
+            var row = table.insertRow();
+
+            var dateCell = row.insertCell(0);
+            var subjectCell = row.insertCell(1);
+            var timeCell = row.insertCell(2);
+            var teacherCell = row.insertCell(3);
+            var actionCell = row.insertCell(4);
+
+            dateCell.textContent = test.date;
+            subjectCell.textContent = test.subject;
+            timeCell.textContent = test.time;
+            teacherCell.textContent = test.teacher;
+            actionCell.innerHTML = '<button class="edit-btn" onclick="editTest(' + index + ')">Uredi</button>' +
+                                   '<button class="delete-btn" onclick="deleteTest(' + index + ')">Izbriši</button>';
+        });
+    }
+
+    function editTest(index) {
+        var test = tests[index];
+
+        document.getElementById("test-date").value = test.date;
+        document.getElementById("test-subject").value = test.subject;
+        document.getElementById("test-time").value = test.time;
+        document.getElementById("test-teacher").value = test.teacher;
+
+        document.getElementById("testForm").onsubmit = function() {
+            test.date = document.getElementById("test-date").value;
+            test.subject = document.getElementById("test-subject").value;
+            test.time = document.getElementById("test-time").value;
+            test.teacher = document.getElementById("test-teacher").value;
+
+            updateTestTable();
+            document.getElementById("testForm").reset();
+            document.getElementById("testForm").onsubmit = addTest;
+        }
+    }
+
+    function deleteTest(index) {
+        tests.splice(index, 1);
+        updateTestTable();
+    }
+</script>
+
+</body>
+</html>

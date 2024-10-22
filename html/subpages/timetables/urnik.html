@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upravljanje urnika</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        header {
+            background-color: #4aaae2;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+        }
+        h2 {
+            color: #4aaae2;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #4aaae2;
+            padding-bottom: 10px;
+        }
+        h3 {
+            color: #333;
+            margin-top: 40px;
+        }
+        form {
+            margin-bottom: 30px;
+        }
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+        input, select {
+            padding: 12px;
+            margin: 10px 0 20px 0;
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            background-color: #f9f9f9;
+            transition: background-color 0.3s ease;
+        }
+        input:focus, select:focus {
+            outline: none;
+            background-color: #e0f7fa;
+        }
+        button {
+            padding: 12px 20px;
+            background-color: #4aaae2; 
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #3e97ca;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #4aaae2; 
+            color: white;
+            text-align: left;
+        }
+        td {
+            background-color: #f9f9f9;
+        }
+        td .edit-btn {
+            padding: 8px 12px;
+            background-color: #f5a623; 
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.3s ease;
+        }
+        td .edit-btn:hover {
+            background-color: #d78b1b; 
+        }
+        td .delete-btn {
+            padding: 8px 12px;
+            background-color: #d0021b;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.3s ease;
+        }
+        td .delete-btn:hover {
+            background-color: #a00015;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Upravljanje urnika</h1>
+</header>
+
+<div class="container">
+    <h2>Administrator - Vpis / Urejanje urnika</h2>
+
+    <form id="scheduleForm">
+        <label for="schedule-day">Dan:</label>
+        <select id="schedule-day" required>
+            <option value="Ponedeljek">Ponedeljek</option>
+            <option value="Torek">Torek</option>
+            <option value="Sreda">Sreda</option>
+            <option value="Četrtek">Četrtek</option>
+            <option value="Petek">Petek</option>
+        </select>
+
+        <label for="schedule-subject">Predmet:</label>
+        <select id="schedule-subject" required>
+            <option value="Matematika">Matematika</option>
+            <option value="Slovenščina">Slovenščina</option>
+            <option value="Fizika">Fizika</option>
+            <option value="Kemija">Kemija</option>
+            <option value="Zgodovina">Zgodovina</option>
+            <option value="Biologija">Biologija</option>
+            <option value="Geografija">Geografija</option>
+            <option value="Informatika">Informatika</option>
+        </select>
+
+        <label for="schedule-start-time">Ura začetka:</label>
+        <input type="time" id="schedule-start-time" required>
+
+        <label for="schedule-end-time">Ura konca:</label>
+        <input type="time" id="schedule-end-time" required>
+
+        <label for="schedule-teacher">Učitelj:</label>
+        <input type="text" id="schedule-teacher" placeholder="Vnesi ime učitelja" required>
+
+        <button type="button" onclick="addSchedule()">Dodaj urnik</button>
+    </form>
+
+    <h3>Seznam urnikov</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Dan</th>
+                <th>Predmet</th>
+                <th>Ura začetka</th>
+                <th>Ura konca</th>
+                <th>Učitelj</th>
+                <th>Uredi / Izbriši</th>
+            </tr>
+        </thead>
+        <tbody id="schedule-list">
+        </tbody>
+    </table>
+</div>
+
+<script>
+    var schedules = [];
+
+    function addSchedule() {
+        var scheduleDay = document.getElementById("schedule-day").value;
+        var scheduleSubject = document.getElementById("schedule-subject").value;
+        var scheduleStartTime = document.getElementById("schedule-start-time").value;
+        var scheduleEndTime = document.getElementById("schedule-end-time").value;
+        var scheduleTeacher = document.getElementById("schedule-teacher").value;
+
+        if (scheduleDay === "" || scheduleSubject === "" || scheduleStartTime === "" || scheduleEndTime === "" || scheduleTeacher === "") {
+            alert("Prosim, izpolnite vsa polja.");
+            return;
+        }
+
+        var newSchedule = {
+            day: scheduleDay,
+            subject: scheduleSubject,
+            startTime: scheduleStartTime,
+            endTime: scheduleEndTime,
+            teacher: scheduleTeacher
+        };
+
+        schedules.push(newSchedule);
+
+        updateScheduleTable();
+        document.getElementById("scheduleForm").reset();
+    }
+
+    function updateScheduleTable() {
+        var table = document.getElementById("schedule-list");
+        table.innerHTML = "";
+
+        schedules.forEach(function(schedule, index) {
+            var row = table.insertRow();
+
+            var dayCell = row.insertCell(0);
+            var subjectCell = row.insertCell(1);
+            var startTimeCell = row.insertCell(2);
+            var endTimeCell = row.insertCell(3);
+            var teacherCell = row.insertCell(4);
+            var actionCell = row.insertCell(5);
+
+            dayCell.textContent = schedule.day;
+            subjectCell.textContent = schedule.subject;
+            startTimeCell.textContent = schedule.startTime;
+            endTimeCell.textContent = schedule.endTime;
+            teacherCell.textContent = schedule.teacher;
+            actionCell.innerHTML = '<button class="edit-btn" onclick="editSchedule(' + index + ')">Uredi</button>' +
+                                   '<button class="delete-btn" onclick="deleteSchedule(' + index + ')">Izbriši</button>';
+        });
+    }
+
+    function editSchedule(index) {
+        var schedule = schedules[index];
+
+        document.getElementById("schedule-day").value = schedule.day;
+        document.getElementById("schedule-subject").value = schedule.subject;
+        document.getElementById("schedule-start-time").value = schedule.startTime;
+        document.getElementById("schedule-end-time").value = schedule.endTime;
+        document.getElementById("schedule-teacher").value = schedule.teacher;
+
+        document.getElementById("scheduleForm").onsubmit = function() {
+            schedule.day = document.getElementById("schedule-day").value;
+            schedule.subject = document.getElementById("schedule-subject").value;
+            schedule.startTime = document.getElementById("schedule-start-time").value;
+            schedule.endTime = document.getElementById("schedule-end-time").value;
+            schedule.teacher = document.getElementById("schedule-teacher").value;
+
+            updateScheduleTable();
+            document.getElementById("scheduleForm").reset();
+            document.getElementById("scheduleForm").onsubmit = addSchedule;
+        }
+    }
+
+    function deleteSchedule(index) {
+        schedules.splice(index, 1);
+        updateScheduleTable();
+    }
+</script>
+
+</body>
+</html>
