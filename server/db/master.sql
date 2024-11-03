@@ -109,6 +109,7 @@ CREATE TABLE  users(
   datetime createdOn default TODAY()
 );
 
--- Sample student
 INSERT INTO users(isAdmin) VALUES(false);
 INSERT INTO student(id, ime, priimek, razred) VALUES(0, "Jan", "Novak", 0);
+INSERT INTO users (isAdmin, uname, password, role) VALUES (1, 'admin', 'admin', 'admin');
+

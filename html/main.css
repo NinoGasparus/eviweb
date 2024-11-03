@@ -1,16 +1,9 @@
 
 .maina {
-  display: none; 
-  background-color:rgb(245, 238, 238) ; 
-  border: 1px solid var(--border-color); 
-  border-radius: 0.5rem; 
-  color: var(--text-color); 
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
-  margin: 0.1rem; 
-  max-width: 2000px;
-  height: 2000px;
+  display: flex;
+  min-height: 100vh; /* Full height of the viewport to prevent scrolling */
+  align-items: flex-start; /* Align items to the start */
 }
-
 
 
 .show-panel {

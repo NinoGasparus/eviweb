@@ -1,33 +1,30 @@
-const users =  require('../index.js');
+const express = require('express');
+const router = express.Router();
+const crypto = require('crypto');
+const db = require('../db'); 
 
-const crypt = require('crypto');
+router.post('/login', (req, res) => {
+    const { uname, password } = req.body;
 
-function login(req, res) {
-    console.log(req.body);
-
-    const user = users.find(u => u.uname === req.body.uname);
-    if (user && user.password === req.body.password) {
-	
-	let token = crypt.randomBytes(256).toString('base64');
-	let ip  =  req.ip;
-	let lifeTime = 0;     
-	let stay = req.body.stay;
-	if(stay === true){
-		lifeTime =  30 * 24 *  60 *  60;
-	}
-	
-	let session = {
-		"token" :  token,
-		"ip" : ip,
-		"lifetime" : lifeTime
-	}
-
-
-	user.tokens.push(session);
-	res.status(200).json({"token" : token, "lifeTime" : lifeTime}).send();
-    } else {
-        res.status(403).send();
+    if (!uname || !password) {
+        return res.status(400).json({ error: 'Username and password are required' });
     }
-}
 
-module.exports = login;
+    db.query('SELECT * FROM users WHERE uname = ?', [uname], (err, results) => {
+        if (err) return res.status(500).json({ error: 'Database error' });
+
+        const user = results[0];
+        if (user) {
+            if (user.password === password) {
+                const token = crypto.randomBytes(64).toString('hex');
+                res.status(200).json({ message: 'Login successful', token, role: user.role });
+            } else {
+                res.status(403).json({ error: 'Invalid credentials' });
+            }
+        } else {
+            res.status(404).json({ error: 'User not found' });
+        }
+    });
+});
+
+module.exports = router;

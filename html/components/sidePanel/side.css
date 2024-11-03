@@ -1,13 +1,15 @@
 .sidebar {
   width: 300px;
-  background-color: var(--first-color); 
-  color: var(--white-color); 
-  padding: 1.5rem; 
+  background-color: var(--first-color);
+  color: var(--white-color);
+  padding: 1.5rem;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-  display: flex; 
-  flex-direction: column; 
-  justify-content: flex-start; 
-  height: 1000px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  /* Remove fixed height to make the sidebar fit the content */
+  height: auto;
+  position: relative;
 }
 
 .sidebar h2 {

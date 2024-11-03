@@ -1,21 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <title>Home</title>
 
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
     <link href="main.css" rel="stylesheet" />
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/3.5.0/remixicon.css"
-      rel="stylesheet"
-    />
-
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/3.5.0/remixicon.css" rel="stylesheet" />
     <link href="components/nav/nav.css" rel="stylesheet"/>
     <link href="components/root/root.css" rel="stylesheet"/>
     <link href="components/sidePanel/side.css" rel="stylesheet"/>
@@ -30,44 +22,48 @@
     <script src="scripts/login.js"></script>
     <script src="scripts/setCookie.js"></script>
     <script src="scripts/navbar.js"></script>
-  </head>
+</head>
 
 <body>
+    <?php
+      injectHTML("components/nav/nav.html");
+      injectHTML("components/login/login.html");
+      injectHTML("components/sidePanel/side.html");
+    ?>
 
-  <?php
-    injectHTML("components/nav/nav.html");
-    injectHTML("components/login/login.html");
-    injectHTML("components/sidePanel/side.html");
-  ?>
- 
+
+
     <script>
-//???????????????????
-    </script>
-    </tr>
-    </tbody> <!--afraid to delete those...  where do they even start? -->
-    </table>
+     document.addEventListener('DOMContentLoaded', function () {
+    const sidebarLinks = document.querySelectorAll('.nav-links a');
 
-    <!-- tech heresy-->
-    <br>
-      <br>
-       <br>
-         <br>
-         <br>
-       <br>
-      <br>
-     <br>
-     <br>
-    
-    <br>
-    <br>
-    
-    <!-- again where do those even start? -->
-    </div>
-    </div>
-    </div>
-    
-    <!-- can this be put  on  top into the head? -->
+    sidebarLinks.forEach(link => {
+        link.addEventListener('click', function (event) {
+            event.preventDefault();  
+            const pageUrl = link.getAttribute('href');  
+            loadPageContent(pageUrl);  // Load the content
+        });
+    });
+
+    function loadPageContent(pageUrl) {
+        document.getElementById('main-content').innerHTML = '<p>Loading...</p>'; 
+        fetch(pageUrl)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.text();
+            })
+            .then(html => {
+                document.getElementById('main-content').innerHTML = html;  
+            })
+            .catch(error => {
+                console.error('Error loading page:', error);
+                document.getElementById('main-content').innerHTML = `<p>Error loading page: ${error.message}</p>`;
+            });
+    }
+});
+
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  </body>
-  
+</body>
 </html>

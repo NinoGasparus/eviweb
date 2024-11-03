@@ -13,13 +13,12 @@ function login() {
         body: JSON.stringify(user),
     })
     .then((response) => {
-        if (response.ok) {
-            return response.json();
-        } else {
+        if (!response.ok) {
             document.getElementById("loginError").innerText = "Login failed";
             document.getElementById("loginError").style.color = "#ff0000";
             throw new Error('Login failed');
         }
+        return response.json();
     })
     .then((data) => {
         document.getElementById("username").innerText = user.uname;
@@ -34,12 +33,13 @@ function login() {
 
         showNavbar(data.role);
         showAdminPanel(data.role); 
-        console.log("Login succesful,", data)
+        console.log("Login successful,", data);
     })
     .catch((error) => {
         console.error('Login error:', error);
     });
 }
+
 document.addEventListener('DOMContentLoaded', function() {
     const logoutButton = document.getElementById('logout');
     
