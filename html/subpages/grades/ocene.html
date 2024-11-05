@@ -167,37 +167,59 @@
 </div>
 
 <script>
-    var grades = []; 
-
-    function addGrade() {
+    async function addGrade() {
         var studentName = document.getElementById("student-name").value;
         var subject = document.getElementById("subject").value;
         var grade = document.getElementById("grade").value;
         var gradeDate = document.getElementById("grade-date").value;
 
-        if(studentName === "" || subject === "" || grade === "" || gradeDate === "") {
+        if (studentName === "" || subject === "" || grade === "" || gradeDate === "") {
             alert("Prosim, izpolnite vsa polja.");
             return;
         }
 
+        let studentId = await getOrCreateStudent(studentName);
+        let subjectId = await getOrCreateSubject(subject);
+
         var newGrade = {
-            name: studentName,
-            subject: subject,
+            studentId: studentId,
+            subjectId: subjectId,
             grade: grade,
             date: gradeDate
         };
 
-        grades.push(newGrade);
+        const response = await fetch('/api/grades', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newGrade)
+        });
 
-        updateGradeTable();
-
-        document.getElementById("gradeForm").reset();
+        if (response.ok) {
+            updateGradeTable();
+            document.getElementById("gradeForm").reset();
+        } else {
+            alert("Napaka pri vnosu ocene.");
+        }
     }
 
-    function updateGradeTable() {
+    async function getOrCreateStudent(name) {
+        return 1; // Dummy return
+    }
+
+    async function getOrCreateSubject(subject) {
+     
+        return 1; 
+    }
+
+    async function updateGradeTable() {
+        const response = await fetch('/api/grades');
+        const grades = await response.json();
+
         var table = document.getElementById("grade-list");
         table.innerHTML = ""; 
-        grades.forEach(function(grade, index) {
+        grades.forEach(function(grade) {
             var row = table.insertRow();
 
             var nameCell = row.insertCell(0);
@@ -206,43 +228,30 @@
             var dateCell = row.insertCell(3);
             var deleteCell = row.insertCell(4);
 
-            nameCell.textContent = grade.name;
+            nameCell.textContent = grade.student;
             subjectCell.textContent = grade.subject;
             gradeCell.textContent = grade.grade;
             dateCell.textContent = grade.date;
-            deleteCell.innerHTML = '<button onclick="deleteGrade(' + index + ')">Izbriši</button>';
+            deleteCell.innerHTML = '<button onclick="deleteGrade(' + grade.id + ')">Izbriši</button>';
         });
 
         updateStudentGradeTable();
     }
 
-    function deleteGrade(index) {
-        grades.splice(index, 1); 
-        updateGradeTable(); 
+    async function deleteGrade(id) {
+        const response = await fetch(`/api/grades/${id}`, { method: 'DELETE' });
+        if (response.ok) {
+            updateGradeTable(); 
+        } else {
+            alert("Napaka pri brisanju ocene.");
+        }
     }
 
     function updateStudentGradeTable() {
         var studentName = "Janez Novak"; 
-        var table = document.getElementById("student-grade-list");
-        table.innerHTML = ""; 
-
-        var studentGrades = grades.filter(function(grade) {
-            return grade.name === studentName;
-        });
-
-        studentGrades.forEach(function(grade) {
-            var row = table.insertRow();
-
-            var subjectCell = row.insertCell(0);
-            var gradeCell = row.insertCell(1);
-            var dateCell = row.insertCell(2);
-
-            subjectCell.textContent = grade.subject;
-            gradeCell.textContent = grade.grade;
-            dateCell.textContent = grade.date;
-        });
     }
-</script>
 
+    window.onload = updateGradeTable;
+</script>
 </body>
 </html>

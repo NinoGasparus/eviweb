@@ -171,6 +171,9 @@
 
 <script>
     var teachers = [];
+
+    document.addEventListener('DOMContentLoaded', loadTeachers);
+
     function addTeacher() {
         var teacherName = document.getElementById("teacher-name").value;
         var teacherSubjects = Array.from(document.getElementById("teacher-subjects").selectedOptions)
@@ -185,11 +188,32 @@
             subjects: teacherSubjects
         };
 
-        teachers.push(newTeacher);
+        // POST request to add a new teacher
+        fetch('/api/teachers', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(newTeacher)
+        })
+        .then(response => {
+            if (!response.ok) throw new Error('Failed to add teacher');
+            return response.json();
+        })
+        .then(teacher => {
+            teachers.push(teacher);
+            updateTeacherTable();
+            document.getElementById("teacherForm").reset();
+        })
+        .catch(error => console.error('Error adding teacher:', error));
+    }
 
-        updateTeacherTable();
-
-        document.getElementById("teacherForm").reset();
+    function loadTeachers() {
+        fetch('/api/teachers')
+            .then(response => response.json())
+            .then(data => {
+                teachers = data;
+                updateTeacherTable();
+            })
+            .catch(error => console.error('Error loading teachers:', error));
     }
 
     function updateTeacherTable() {
@@ -209,9 +233,9 @@
         });
     }
 
+
     function editTeacher(index) {
         var teacher = teachers[index];
-
         document.getElementById("teacher-name").value = teacher.name;
 
         var options = document.getElementById("teacher-subjects").options;
@@ -220,20 +244,38 @@
         }
 
         document.getElementById("teacherForm").onsubmit = function() {
-
             teacher.name = document.getElementById("teacher-name").value;
             teacher.subjects = Array.from(document.getElementById("teacher-subjects").selectedOptions)
                                      .map(option => option.value);
 
-            updateTeacherTable();
-
-            document.getElementById("teacherForm").reset();
-            document.getElementById("teacherForm").onsubmit = addTeacher; 
+          
+            fetch('/api/teachers/' + teacher.id, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(teacher)
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('Failed to update teacher');
+                updateTeacherTable();
+                document.getElementById("teacherForm").reset();
+                document.getElementById("teacherForm").onsubmit = addTeacher; 
+            })
+            .catch(error => console.error('Error updating teacher:', error));
         }
     }
+
+    // Function to delete a teacher
     function deleteTeacher(index) {
-        teachers.splice(index, 1); 
-        updateTeacherTable(); 
+        var teacherId = teachers[index].id; 
+        fetch('/api/teachers/' + teacherId, {
+            method: 'DELETE'
+        })
+        .then(response => {
+            if (!response.ok) throw new Error('Failed to delete teacher');
+            teachers.splice(index, 1); 
+            updateTeacherTable(); 
+        })
+        .catch(error => console.error('Error deleting teacher:', error));
     }
 
 </script>

@@ -31,7 +31,6 @@ function login() {
             setCookie('token', data.token, data.lifeTime);
         }
 
-        showNavbar(data.role);
         showAdminPanel(data.role); 
         console.log("Login successful,", data);
     })

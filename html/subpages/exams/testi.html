@@ -175,7 +175,15 @@
 </div>
 
 <script>
-    var tests = [];
+    function fetchTests() {
+        fetch('http://localhost:6969/api/tests')
+            .then(response => response.json())
+            .then(data => {
+                tests = data; // Store the fetched tests
+                updateTestTable();
+            })
+            .catch(error => console.error('Error fetching tests:', error));
+    }
 
     function addTest() {
         var testDate = document.getElementById("test-date").value;
@@ -189,64 +197,66 @@
         }
 
         var newTest = {
-            date: testDate,
-            subject: testSubject,
-            time: testTime,
-            teacher: testTeacher
+            test_date: testDate,
+            test_subject: testSubject,
+            test_time: testTime,
+            test_teacher: testTeacher
         };
 
-        tests.push(newTest);
-
-        updateTestTable();
-        document.getElementById("testForm").reset();
-    }
-
-    function updateTestTable() {
-        var table = document.getElementById("test-list");
-        table.innerHTML = "";
-
-        tests.forEach(function(test, index) {
-            var row = table.insertRow();
-
-            var dateCell = row.insertCell(0);
-            var subjectCell = row.insertCell(1);
-            var timeCell = row.insertCell(2);
-            var teacherCell = row.insertCell(3);
-            var actionCell = row.insertCell(4);
-
-            dateCell.textContent = test.date;
-            subjectCell.textContent = test.subject;
-            timeCell.textContent = test.time;
-            teacherCell.textContent = test.teacher;
-            actionCell.innerHTML = '<button class="edit-btn" onclick="editTest(' + index + ')">Uredi</button>' +
-                                   '<button class="delete-btn" onclick="deleteTest(' + index + ')">Izbriši</button>';
-        });
-    }
-
-    function editTest(index) {
-        var test = tests[index];
-
-        document.getElementById("test-date").value = test.date;
-        document.getElementById("test-subject").value = test.subject;
-        document.getElementById("test-time").value = test.time;
-        document.getElementById("test-teacher").value = test.teacher;
-
-        document.getElementById("testForm").onsubmit = function() {
-            test.date = document.getElementById("test-date").value;
-            test.subject = document.getElementById("test-subject").value;
-            test.time = document.getElementById("test-time").value;
-            test.teacher = document.getElementById("test-teacher").value;
-
+        fetch('http://localhost:6969/api/tests', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newTest)
+        })
+        .then(response => response.json())
+        .then(data => {
+            tests.push(data);
             updateTestTable();
             document.getElementById("testForm").reset();
-            document.getElementById("testForm").onsubmit = addTest;
-        }
+        })
+        .catch(error => console.error('Error adding test:', error));
+    }
+
+    function updateTest(index) {
+        var test = tests[index];
+        var updatedTest = {
+            test_date: document.getElementById("test-date").value,
+            test_subject: document.getElementById("test-subject").value,
+            test_time: document.getElementById("test-time").value,
+            test_teacher: document.getElementById("test-teacher").value
+        };
+
+        fetch(`http://localhost:6969/api/tests/${test.id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updatedTest)
+        })
+        .then(response => response.json())
+        .then(data => {
+            tests[index] = data; // Update the test in the array
+            updateTestTable();
+            document.getElementById("testForm").reset();
+        })
+        .catch(error => console.error('Error updating test:', error));
     }
 
     function deleteTest(index) {
-        tests.splice(index, 1);
-        updateTestTable();
+        var test = tests[index];
+        fetch(`http://localhost:6969/api/tests/${test.id}`, {
+            method: 'DELETE'
+        })
+        .then(() => {
+            tests.splice(index, 1);
+            updateTestTable();
+        })
+        .catch(error => console.error('Error deleting test:', error));
     }
+
+    document.addEventListener('DOMContentLoaded', fetchTests);
 </script>
 
 </body>

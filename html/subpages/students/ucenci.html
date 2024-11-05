@@ -172,8 +172,6 @@
 </div>
 
 <script>
-    var students = [];
-
     function addStudent() {
         var studentName = document.getElementById("student-name").value;
         var studentSubjects = Array.from(document.getElementById("student-subjects").selectedOptions)
@@ -184,59 +182,74 @@
             return;
         }
 
-        var newStudent = {
+        var studentData = {
             name: studentName,
             subjects: studentSubjects
         };
 
-        students.push(newStudent);
-
-        updateStudentTable();
-        document.getElementById("studentForm").reset();
-    }
-
-    function updateStudentTable() {
-        var table = document.getElementById("student-list");
-        table.innerHTML = "";
-
-        students.forEach(function(student, index) {
-            var row = table.insertRow();
-
-            var nameCell = row.insertCell(0);
-            var subjectsCell = row.insertCell(1);
-            var actionCell = row.insertCell(2);
-
-            nameCell.textContent = student.name;
-            subjectsCell.textContent = student.subjects.join(", ");
-            actionCell.innerHTML = '<button class="edit-btn" onclick="editStudent(' + index + ')">Uredi</button>' +
-                                   '<button class="delete-btn" onclick="deleteStudent(' + index + ')">Izbriši</button>';
+        fetch('/api/students', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(studentData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            updateStudentTable();
+            document.getElementById("studentForm").reset();
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("Prišlo je do napake pri dodajanju učenca.");
         });
     }
 
+    function updateStudentTable() {
+        fetch('/api/students')
+            .then(response => response.json())
+            .then(students => {
+                var table = document.getElementById("student-list");
+                table.innerHTML = "";
+
+                students.forEach(function(student, index) {
+                    var row = table.insertRow();
+
+                    var nameCell = row.insertCell(0);
+                    var subjectsCell = row.insertCell(1);
+                    var actionCell = row.insertCell(2);
+
+                    nameCell.textContent = student.name;
+                    subjectsCell.textContent = student.subjects.join(", ");
+                    actionCell.innerHTML = '<button class="edit-btn" onclick="editStudent(' + index + ')">Uredi</button>' +
+                                           '<button class="delete-btn" onclick="deleteStudent(' + student.id + ')">Izbriši</button>';
+                });
+            })
+            .catch(error => console.error("Error fetching students:", error));
+    }
+
     function editStudent(index) {
-        var student = students[index];
-
-        document.getElementById("student-name").value = student.name;
-        var options = document.getElementById("student-subjects").options;
-        for (var i = 0; i < options.length; i++) {
-            options[i].selected = student.subjects.includes(options[i].value);
-        }
-
-        document.getElementById("studentForm").onsubmit = function() {
-            student.name = document.getElementById("student-name").value;
-            student.subjects = Array.from(document.getElementById("student-subjects").selectedOptions)
-                                     .map(option => option.value);
-
-            updateStudentTable();
-            document.getElementById("studentForm").reset();
-            document.getElementById("studentForm").onsubmit = addStudent;
-        }
     }
 
-    function deleteStudent(index) {
-        students.splice(index, 1);
-        updateStudentTable();
+    function deleteStudent(id) {
+        fetch(`/api/students/${id}`, {
+            method: 'DELETE'
+        })
+        .then(response => {
+            if (response.ok) {
+                alert("Učenec uspešno izbrisan.");
+                updateStudentTable();
+            } else {
+                alert("Prišlo je do napake pri brisanju učenca.");
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("Prišlo je do napake pri brisanju učenca.");
+        });
     }
+
+    updateStudentTable();
 </script>
 
 </body>

@@ -85,6 +85,9 @@
 <div class="container">
     <h2>Urejanje podatkov</h2>
     <form id="profileForm">
+        <label for="student-id">ID študenta:</label>
+        <input type="text" id="student-id" placeholder="Vnesi ID študenta" required>
+
         <label for="student-name">Ime in priimek:</label>
         <input type="text" id="student-name" placeholder="Vnesi ime in priimek" required>
 
@@ -103,12 +106,13 @@
 
 <script>
     function updateProfile() {
+        var studentId = document.getElementById("student-id").value;
         var name = document.getElementById("student-name").value;
         var email = document.getElementById("email").value;
         var password = document.getElementById("password").value;
         var confirmPassword = document.getElementById("confirm-password").value;
 
-        if (name === "" || email === "" || password === "" || confirmPassword === "") {
+        if (name === "" || email === "" || password === "" || confirmPassword === "" || studentId === "") {
             alert("Prosim, izpolnite vsa polja.");
             return;
         }
@@ -118,8 +122,33 @@
             return;
         }
 
-        alert("Profil uspešno posodobljen!");
-        document.getElementById("profileForm").reset();
+        // Prepare data to send
+        var profileData = {
+            studentId: studentId,
+            name: name,
+            email: email,
+            password: password
+        };
+
+        fetch('/api/updateProfile', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(profileData)
+        })
+        .then(response => {
+            if (response.ok) {
+                alert("Profil uspešno posodobljen!");
+                document.getElementById("profileForm").reset();
+            } else {
+                alert("Prišlo je do napake pri posodobitvi profila.");
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("Prišlo je do napake pri posodobitvi profila.");
+        });
     }
 </script>
 

@@ -102,11 +102,14 @@ CREATE TABLE  absences(
   FOREIGN KEY(ura) REFERENCES hour(id)
   FOREIGN KEY(student) REFERENCES student(id)
 );
-CREATE TABLE  users(
-  int id AUTO INCREMENT,
-  PRIMARY KEY(id),
-  boolean isAdmin default  false,
-  datetime createdOn default TODAY()
+CREATE TABLE users (
+    id INT AUTO_INCREMENT,           -- Corrected AUTO_INCREMENT syntax
+    isAdmin BOOLEAN DEFAULT FALSE,   -- Corrected BOOLEAN type
+    createdOn DATETIME DEFAULT CURRENT_TIMESTAMP,  -- Use CURRENT_TIMESTAMP for default date
+    uname VARCHAR(50),               -- Added uname for username
+    password VARCHAR(255),           -- Added password column
+    role ENUM('admin', 'teacher', 'student'),  -- Role column with ENUM values
+    PRIMARY KEY(id)
 );
 
 INSERT INTO users(isAdmin) VALUES(false);

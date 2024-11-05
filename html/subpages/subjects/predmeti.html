@@ -165,6 +165,105 @@
     </div>
 
 </div>
-
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        loadSubjects();
+        
+        document.getElementById('addSubjectForm').addEventListener('submit', addSubject);
+    });
+    
+    function loadSubjects() {
+        fetch('/api/subjects')
+            .then(response => response.json())
+            .then(subjects => {
+                const subjectList = document.getElementById('subject-list');
+                subjectList.innerHTML = '';
+                subjects.forEach(subject => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${subject.name}</td>
+                        <td><button onclick="editSubject(${subject.id})">Uredi</button></td>
+                        <td><button onclick="deleteSubject(${subject.id})">Izbriši</button></td>
+                    `;
+                    subjectList.appendChild(row);
+                });
+            })
+            .catch(error => console.error('Error loading subjects:', error));
+    }
+    
+    function addSubject(event) {
+        event.preventDefault();
+        const subjectName = document.getElementById('subject-name').value;
+    
+        fetch('/api/subjects', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: subjectName })
+        })
+        .then(response => {
+            if (!response.ok) throw new Error('Failed to add subject');
+            return response.json();
+        })
+        .then(subject => {
+            loadSubjects();
+            document.getElementById('subject-name').value = ''; // Clear input
+        })
+        .catch(error => console.error('Error adding subject:', error));
+    }
+    
+    // Delete a subject
+    function deleteSubject(id) {
+        fetch(`/api/subjects/${id}`, { method: 'DELETE' })
+            .then(response => {
+                if (!response.ok) throw new Error('Failed to delete subject');
+                loadSubjects();
+            })
+            .catch(error => console.error('Error deleting subject:', error));
+    }
+    
+    function editSubject(id) {
+        const newName = prompt('Vnesite novo ime predmeta:');
+        if (newName) {
+            fetch(`/api/subjects/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: newName })
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('Failed to update subject');
+                loadSubjects();
+            })
+            .catch(error => console.error('Error updating subject:', error));
+        }
+    }
+    
+    function loadSubjectsForSelectors() {
+        fetch('/api/subjects')
+            .then(response => response.json())
+            .then(subjects => {
+                const teacherSubjects = document.getElementById('teacher-subjects');
+                const studentSubjects = document.getElementById('student-subjects');
+                const taskSubjects = document.getElementById('task-subjects');
+                const taskSubjectsStudent = document.getElementById('task-subjects-student');
+    
+                // Clear existing options
+                teacherSubjects.innerHTML = '';
+                studentSubjects.innerHTML = '';
+                taskSubjects.innerHTML = '';
+                taskSubjectsStudent.innerHTML = '';
+    
+                subjects.forEach(subject => {
+                    const option = new Option(subject.name, subject.id);
+                    teacherSubjects.add(option);
+                    studentSubjects.add(option.cloneNode(true));
+                    taskSubjects.add(option.cloneNode(true));
+                    taskSubjectsStudent.add(option.cloneNode(true));
+                });
+            })
+            .catch(error => console.error('Error loading subjects for selectors:', error));
+    }
+    
+    loadSubjectsForSelectors();
+    </script>
 </body>
 </html>
